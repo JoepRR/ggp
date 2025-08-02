@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import RewardsShop from './components/RewardsShop';
@@ -12,6 +12,7 @@ import './App.css';
 
 function AppContent() {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -26,6 +27,11 @@ function AppContent() {
 
   if (!user) {
     return <Login />;
+  }
+
+  // Redirect based on role if user is on home page
+  if (location.pathname === '/' && user.role === 'admin') {
+    return <Navigate to="/admin" replace />;
   }
 
   return (
